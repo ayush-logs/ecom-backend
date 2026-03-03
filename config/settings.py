@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-5z8moytz43a&+ee9oghkq!5_==!bp2vjsrk69idr0w!hwy_!yi"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = (["https://ecom-backend-broken.onrender.com/"],)
 
 
 # Application definition
@@ -37,12 +37,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     # 3rd Party Libraries
-    'rest_framework', 
-
+    "rest_framework",
     # Apps
-    'products', 
+    "products",
 ]
 
 MIDDLEWARE = [
