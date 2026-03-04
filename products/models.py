@@ -1,16 +1,23 @@
 from django.db import models
 from django.utils.text import slugify
 
-# TODO add Abstract Class for UUID's, DateTime & Slug Here
 
-
-class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
+# TODO Add SluggeedModel Abstract Class
+class TimeStampedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # TODO add defualt ordering by name here
+    class Meta:
+        abstract = True
+
+
+class Category(TimeStampedModel):
+    name = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name_plural = "Categories"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -21,7 +28,9 @@ class Category(models.Model):
         return self.name
 
 
-class Product(models.Model):
+class Product(TimeStampedModel):
+    # TODO add stock field
+
     category = models.ForeignKey(
         Category, related_name="products", on_delete=models.CASCADE
     )
@@ -30,10 +39,10 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    # TODO add default ordering by -created_at here
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name_plural = "Products"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -42,3 +51,4 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
